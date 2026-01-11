@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  
+  <!-- SEO Meta Tags -->
+  <title>GitHub Send Commit — Уведомления о коммитах в Telegram</title>
+  <meta name="description" content="Бот для Telegram, который присылает уведомления о новых коммитах в публичных репозиториях GitHub. Без авторизации, без ваших токенов — только безопасные обновления.">
+  <meta name="keywords" content="github bot, telegram github bot, commit notifications, отслеживание коммитов, github commits, devtools, open source, developer tools, уведомления github">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="GitHub Send Commit — Отслеживание коммитов в Telegram" />
+  <meta property="og:description" content="Получайте новые коммиты из GitHub напрямую в Telegram — без входа и персональных токенов." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://t.me/githubsend_bot" />
+  <meta property="og:image" content="https://via.placeholder.com/1200x630/0d1117/ffffff?text=GitHub+Send+Commit" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="GitHub Send Commit — Отслеживание коммитов в Telegram" />
+  <meta name="twitter:description" content="Бот для Telegram, который следит за новыми коммитами на GitHub и присылает их вам — безопасно и бесплатно." />
+
+  <style>
+    /* GitHub-like dark theme */
+    :root {
+      --bg-color: #0d1117;
+      --fg-color: #c9d1d9;
+      --muted-color: #8b949e;
+      --border-color: #30363d;
+      --button-bg: #238636;
+      --button-hover-bg: #2ea043;
+      --link-color: #58a6ff;
+      --card-bg: #161b22;
+      --highlight-bg: #1f242b;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--fg-color);
+      line-height: 1.5;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+      color: #f0f6fc;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--muted-color);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .btn {
+      display: inline-block;
+      background-color: var(--button-bg);
+      color: white;
+      text-decoration: none;
+      padding: 0.65rem 1.25rem;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 500;
+      margin-top: 1.2rem;
+      transition: background-color 0.2s;
+    }
+
+    .btn:hover {
+      background-color: var(--button-hover-bg);
+      text-decoration: none;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 1.5rem;
+    }
+
+    h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 1.2rem 0 0.8rem;
+      color: #f0f6fc;
+    }
+
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 0.6rem 0 1rem;
+    }
+
+    li {
+      margin-bottom: 0.5rem;
+    }
+
+    a {
+      color: var(--link-color);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .highlight {
+      background-color: var(--highlight-bg);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-family: ui-monospace, SFMono-Regular, 'SF Mono', Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+      font-size: 0.95em;
+      color: #a5d6ff;
+    }
+
+    .footer-note {
+      text-align: center;
+      margin-top: 2rem;
+      color: var(--muted-color);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.8rem;
+      }
+      .subtitle {
+        font-size: 1rem;
+      }
+      .card {
+        padding: 1.2rem;
+      }
+    }
+  </style>
+    <link rel="apple-touch-icon" sizes="57x57" href="/fav/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/fav/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/fav/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/fav/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/fav/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/fav/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/fav/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/fav/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/fav/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/fav/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/fav/fav/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/fav/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/fav/favicon-16x16.png">
+    <link rel="manifest" href="/fav/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>GitHub Send Commit</h1>
+      <p class="subtitle">Получайте уведомления о новых коммитах в публичных репозиториях GitHub — быстро и без авторизации.</p>
+      <a href="https://t.me/githubsend_bot" class="btn" target="_blank" rel="noopener">→ Запустить бота</a>
+    </header>
+
+    <main>
+      <div class="card">
+        <div class="section">
+          <h2>✨ Возможности</h2>
+          <ul>
+            <li>🔔 Мгновенные уведомления о <strong>новых коммитах</strong></li>
+            <li>🌍 Поддержка языков: <strong>русский / english</strong></li>
+            <li>📥 Управление подписками через кнопки</li>
+            <li>⏱ Проверка каждые <strong>10 секунд</strong></li>
+          </ul>
+        </div>
+
+        <div class="section">
+          <h2>❗ Важно!</h2>
+          <p>Бот <strong>не требует</strong> входа в GitHub.</p>
+          <p>Мы используем <strong>собственные токены</strong> для получения коммитов — <strong>никогда не отправляйте свои логины, пароли или персональные токены</strong>!</p>
+        </div>
+
+        <div class="section">
+          <h2>▶️ Как начать?</h2>
+          <ol>
+            <li>Перейдите в <a href="https://t.me/githubsend_bot" target="_blank" rel="noopener">@githubsend_bot</a></li>
+            <li>Нажмите <strong>«Подписаться»</strong></li>
+            <li>Введите репозиторий в формате: <span class="highlight">владелец/название</span> (например: <span class="highlight">torvalds/linux</span>)</li>
+            <li>Готово! Новые коммиты будут приходить вам в Telegram.</li>
+          </ol>
+        </div>
+      </div>
+
+      <p class="footer-note">Следите за open-source — безопасно, удобно и без спама.</p>
+    </main>
+  </div>
+</body>
+</html>
